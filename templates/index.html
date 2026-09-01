@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+    <div class="container">
+    {% for product in products %}
+        <div class="card">
+            {{ product.name }}
+            {{ product.price }}
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}
