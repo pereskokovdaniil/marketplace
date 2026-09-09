@@ -8,7 +8,16 @@
     <title>{% block title %}Маркетплейс{% endblock %}</title>
 </head>
 <body>
-    <header>навигация</header>
+    <header>
+        <span>Навигация</span>
+        {% if user.is_authenticated %}
+            <span>{{ user.username }}</span>
+            <a href="{% url 'logout' %}">Выйти</a>
+        {% else %}
+            <a href="{% url 'login' %}">Войти</a>
+            <a href="{% url 'register' %}">Регистрация</a>
+        {% endif %}
+    </header>
 
     <main>
         {% block content %}
