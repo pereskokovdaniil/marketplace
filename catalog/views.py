@@ -1,12 +1,26 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from catalog.models import Product, Cart, CartItem
+from catalog.models import Product, Cart, CartItem, Category
 from .forms import ProductForm
 
 
 def index(request):
     products = Product.objects.all()
-    return render(request, 'index.html', {'products': products})
+    сategories = Category.objects.all()
+
+    category_id = request.GET.get('category')
+    if category_id:
+        products = products.filter(category_id=category_id)
+
+    search_query = request.GET.get('search_query')
+    if search_query:
+        products = products.filter(name__icontains=search_query)
+
+
+    return render(request, 'index.html', {
+        'products': products,
+        'categories': сategories
+    })
 
 def product_detail(request, product_id):
     product = Product.objects.get(id=product_id)

@@ -3,12 +3,30 @@
 {% block title %}Главная{% endblock %}
 
 {% block content %}
-    <div class="container">
-    {% for product in products %}
-        <div class="card">
-            <a href="{% url 'product_detail' product.id %}">{{ product.name }}</a>
-            {{ product.price }}
-        </div>
-    {% endfor %}
+<div class="container">
+    <form method="get">
+        <input type="text" name="search_query" placeholder="Поиск товаров">
+        <button type="submit">Найти</button>
+    </form>
+
+    <div class="categories">
+        <a href="{% url 'index' %}">Все товары</a>
+        {% for category in categories %}
+            <a href="?category={{ category.id }}">{{ category.name }}</a>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="container">
+    {% if products %}
+        {% for product in products %}
+            <div class="card">
+                <a href="{% url 'product_detail' product.id %}">{{ product.name }}</a>
+                {{ product.price }}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Товары нет</p>
+    {% endif %}
     </div>
 {% endblock %}
