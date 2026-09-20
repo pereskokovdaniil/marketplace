@@ -5,6 +5,9 @@
 {% block content %}
     <div class="container">
         <a href="{% url 'index' %}">главная</a>
+        {% if user == product.seller %}
+        <a href="{% url 'product_edit' product.id %}">Редактировать</a>
+        {% endif %}
         {{ product.name }}<hr>
         {{ product.price }}<hr>
         {{ product.description }}<hr>

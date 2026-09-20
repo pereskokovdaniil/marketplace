@@ -16,6 +16,9 @@ def index(request):
     if search_query:
         products = products.filter(name__icontains=search_query)
 
+    my_products = request.GET.get('my_products')
+    if my_products and request.user.is_authenticated:
+        products = products.filter(seller=request.user)
 
     return render(request, 'index.html', {
         'products': products,
@@ -25,6 +28,20 @@ def index(request):
 def product_detail(request, product_id):
     product = Product.objects.get(id=product_id)
     return render(request, 'product_detail.html', {'product': product})
+
+def product_edit(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    if request.user != product.seller:
+        return redirect('index')
+
+    if request.method == 'POST':
+        form = ProductForm(request.POST, instance=product)
+        if form.is_valid():
+            form.save()
+            return redirect('product_detail', product_id=product_id)
+    else:
+        form = ProductForm(instance=product)
+    return render(request, 'product_edit.html', {'form': form, 'product': product})
 
 @login_required
 def add_product(request):
