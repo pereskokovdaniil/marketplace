@@ -84,9 +84,11 @@ def cart_detail(request):
 
     cart, created = Cart.objects.get_or_create(user=request.user)
     items = cart.cartitem_set.all()
-    total = sum(item.product.price * item.quantity for item in items)
+    total = 0
+    for item in items:
+        total += item.quantity * item.product.price
 
-    return render(request, 'cart.html', {'cart': cart, 'items': items})
+    return render(request, 'cart.html', {'cart': cart, 'items': items, 'total': total})
 
 def remove_cart(request, item_id):
     if not request.user.is_authenticated:
@@ -96,3 +98,21 @@ def remove_cart(request, item_id):
     item.delete()
 
     return redirect('cart')
+
+def checkout(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    items = cart.cartitem_set.all()
+
+    for item in items:
+        if item.product.stock < item.quantity:
+            return redirect('cart')
+        product = item.product
+        product.stock -= item.quantity
+        product.save()
+
+    items.delete()
+
+    return redirect('index')

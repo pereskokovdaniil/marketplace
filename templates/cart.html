@@ -12,5 +12,5 @@
         {% empty %}
             <p>Корзина пуста</p>
     {% endfor %}
-    <p>Итого: {{ total }} руб.</p>
+    <p>Итого: {{ total }} руб. <a href="{% url 'checkout' %}">Оплатить</a></p>
 {% endblock %}
