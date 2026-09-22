@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from catalog.models import Product, Cart, CartItem, Category
+from catalog.models import Product, Cart, CartItem, Category, Order, OrderItem
 from .forms import ProductForm
 
 
@@ -109,10 +109,32 @@ def checkout(request):
     for item in items:
         if item.product.stock < item.quantity:
             return redirect('cart')
-        product = item.product
-        product.stock -= item.quantity
-        product.save()
+
+    total = 0
+    for item in items:
+        total += item.quantity * item.product.price
+
+    order = Order.objects.create(user=request.user, total=total)
+
+    for item in items:
+        OrderItem.objects.create(
+            order=order,
+            product=item.product,
+            quantity=item.quantity,
+            price=item.product.price
+        )
+        item.product.stock -= item.quantity
+        item.product.save()
 
     items.delete()
 
-    return redirect('index')
+    return redirect('my_orders')
+
+
+def my_orders(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+
+    return render(request, 'my_orders.html', {'orders': orders})
