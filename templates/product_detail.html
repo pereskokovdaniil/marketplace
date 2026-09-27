@@ -13,6 +13,21 @@
         {{ product.description }}<hr>
         {{ product.category }}<hr>
         {{ product.seller }}<hr>
+        осталось: {{ product.stock }}<hr>
         <a href="{% url 'add_cart' product.id %}">Добавить в корзину</a>
+
+        {% if can_review %}
+            <a href="{% url 'add_review' product.id %}">Добавить отзыв</a>
+        {% endif %}
+
+        <p>Средний рейтинг: {{ rating|floatformat:1 }}</p>
+        {% for review in reviews %}
+        <div>
+            <p>{{ review.user.username }} - {{ review.rating }}/5</p>
+            <p>{{ review.created_at }}</p>
+        </div>
+        {% empty %}
+        <p>Отзывов пока нет</p>
+        {% endfor %}
     </div>
 {% endblock %}

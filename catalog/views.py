@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from catalog.models import Product, Cart, CartItem, Category, Order, OrderItem
-from .forms import ProductForm
+from catalog.models import Product, Cart, CartItem, Category, Order, OrderItem, Review
+from .forms import ProductForm, ReviewForm
 
 
 def index(request):
@@ -27,7 +27,27 @@ def index(request):
 
 def product_detail(request, product_id):
     product = Product.objects.get(id=product_id)
-    return render(request, 'product_detail.html', {'product': product})
+    reviews = product.review_set.all()
+
+    rating = 0
+    if reviews:
+        total = 0
+        for review in reviews:
+            total += review.rating
+        rating = total / len(reviews)
+
+    can_review = False
+    if request.user.is_authenticated:
+        ordered = OrderItem.objects.filter(order__user=request.user, product=product).exists()
+        already = Review.objects.filter(user=request.user, product=product).exists()
+        can_review = ordered and not already
+
+    return render(request, 'product_detail.html', {
+        'product': product,
+        'reviews': reviews,
+        'rating': rating,
+        'can_review': can_review
+    })
 
 def product_edit(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -130,7 +150,6 @@ def checkout(request):
 
     return redirect('my_orders')
 
-
 def my_orders(request):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -138,3 +157,29 @@ def my_orders(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
 
     return render(request, 'my_orders.html', {'orders': orders})
+
+def add_review(request, product_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    product = get_object_or_404(Product, id=product_id)
+    ordered = OrderItem.objects.filter(order__user=request.user, product=product).exists()
+
+    if not ordered:
+        return redirect('product_detail', product_id=product_id)
+
+    already_reviewed = Review.objects.filter(user=request.user, product=product).exists()
+    if already_reviewed:
+        return redirect('product_detail', product_id=product_id)
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.product = product
+            review.user = request.user
+            review.save()
+            return redirect('product_detail', product_id=product_id)
+    else:
+        form = ReviewForm()
+
+    return render(request, 'add_review.html', {'form': form, 'product': product})
