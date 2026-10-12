@@ -55,7 +55,7 @@ def product_edit(request, product_id):
         return redirect('index')
 
     if request.method == 'POST':
-        form = ProductForm(request.POST, instance=product)
+        form = ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
             form.save()
             return redirect('product_detail', product_id=product_id)
@@ -69,7 +69,7 @@ def add_product(request):
         return redirect('index')
 
     if request.method == 'POST':
-        form = ProductForm(request.POST)
+        form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             product = form.save(commit=False)
             product.seller = request.user
