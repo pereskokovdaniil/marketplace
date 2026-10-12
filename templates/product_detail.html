@@ -9,6 +9,11 @@
         <a href="{% url 'product_edit' product.id %}">Редактировать</a>
         {% endif %}
         {{ product.name }}<hr>
+        {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% else %}
+            <p>-</p>
+        {% endif %}
         {{ product.price }}<hr>
         {{ product.description }}<hr>
         {{ product.category }}<hr>
