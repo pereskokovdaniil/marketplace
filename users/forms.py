@@ -7,17 +7,12 @@ from django.contrib.auth.forms import AuthenticationForm
 class RegisterForm(forms.ModelForm):
     role = forms.ChoiceField(choices=Profile.ROLE_CHOICES, widget=forms.Select, label='Роль')
     seller_name = forms.CharField(max_length=50, required=False, label='Название магазина')
+    username = forms.CharField(label='Имя пользователя', help_text='')
+    password = forms.CharField(label='Пароль', widget=forms.PasswordInput, help_text='')
 
     class Meta:
         model = User
         fields = ('username', 'password')
-        labels = {
-            'username': 'Имя пользователя',
-            'password': 'Пароль',
-        }
-        widgets = {
-            'password': forms.PasswordInput()
-        }
 
     def save(self, commit = True):
         username = self.cleaned_data.get('username')

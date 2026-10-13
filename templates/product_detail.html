@@ -18,7 +18,7 @@
                 <p class="product-price">{{ product.price }} руб.</p>
                 <p class="product-desc">{{ product.description }}</p>
                 <p><strong>Категория:</strong> {{ product.category }}</p>
-                <p><strong>Продавец:</strong> {{ product.seller }}</p>
+                <p><strong>Магазин:</strong> {{ product.seller.profile.seller_name }}</p>
                 <p><strong>Осталось:</strong> {{ product.stock }} шт.</p>
 
                 {% if user == product.seller %}

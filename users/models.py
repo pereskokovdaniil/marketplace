@@ -7,7 +7,6 @@ class Profile(models.Model):
     ROLE_CHOICES = (
         ("buyer", "покупатель"),
         ("seller", "продавец")
-
     )
 
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default="buyer")
