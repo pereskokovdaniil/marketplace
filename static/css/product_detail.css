@@ -62,6 +62,7 @@
     margin-bottom: 8px;
 }
 
+.btn-none,
 .btn-edit,
 .btn-cart,
 .btn-review {
@@ -74,6 +75,16 @@
     text-decoration: none;
     border-radius: 8px;
     transition: 0.3s;
+}
+
+.btn-review {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.btn-none {
+    opacity: 0.7;
+    background-color: #758297;
 }
 
 .btn-edit:hover,

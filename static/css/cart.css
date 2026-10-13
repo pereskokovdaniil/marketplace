@@ -73,3 +73,14 @@
     color: #999999;
     font-size: 18px;
 }
+
+.out-of-stock .cart-name {
+    color: #999999;
+}
+
+.out-of-stock::after {
+    content: "(нет в наличии)";
+    color: #e74c3c;
+    font-size: 12px;
+    margin-left: 10px;
+}

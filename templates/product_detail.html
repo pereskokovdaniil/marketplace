@@ -25,7 +25,11 @@
                     <a href="{% url 'product_edit' product.id %}" class="btn-edit">Редактировать</a>
                 {% endif %}
 
-                <a href="{% url 'add_cart' product.id %}" class="btn-cart">Добавить в корзину</a>
+                {% if product.stock > 0 %}
+                    <a href="{% url 'add_cart' product.id %}" class="btn-cart">Добавить в корзину</a>
+                {% else %}
+                    <p class="out-of-stock btn-none">Нет в наличии</p>
+                {% endif %}
             </div>
         </div>
 

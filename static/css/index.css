@@ -1,5 +1,6 @@
 .container {
     max-width: 1300px;
+    min-width: 1300px;
     width: 100%;
     padding: 30px;
     margin: 70px auto 50px auto;
@@ -85,4 +86,7 @@
 
 .product-name {
     font-size: 24px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
