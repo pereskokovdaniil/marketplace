@@ -3,38 +3,40 @@
 {% block title %}Главная{% endblock %}
 
 {% block content %}
-<div class="container2">
-    <form method="get">
-        <input type="text" name="search_query" placeholder="Поиск товаров">
-        <button type="submit">Найти</button>
-    </form>
+<div class="container">
+    <div class="top-bar">
+        <form method="get">
+            <input type="text" name="search_query" placeholder="Поиск товаров">
+            <button type="submit">Найти</button>
+        </form>
 
-    <div class="categories">
-        <a href="{% url 'index' %}">Все товары</a>
-        {% for category in categories %}
-            <a href="?category={{ category.id }}">{{ category.name }}</a>
-        {% endfor %}
-        {% if user.is_authenticated and user.profile.role == 'seller' %}
-            <a href="?my_products=1">Мои товары</a>
+        <div class="categories">
+            <a href="{% url 'index' %}">Все товары</a>
+            {% for category in categories %}
+                <a href="?category={{ category.id }}">{{ category.name }}</a>
+            {% endfor %}
+            {% if user.is_authenticated and user.profile.role == 'seller' %}
+                <a href="?my_products=1">Мои товары</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="products">
+        {% if products %}
+            {% for product in products %}
+                <a href="{% url 'product_detail' product.id %}"><div class="card">
+                    <p class="product-name">{{ product.name }}</p>
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                        <p>-</p>
+                    {% endif %}
+                    {{ product.price }}<span> ₽</span>
+                </div></a>
+            {% endfor %}
+        {% else %}
+            <p>Товаров нет</p>
         {% endif %}
     </div>
 </div>
-
-<div class="container">
-    {% if products %}
-        {% for product in products %}
-            <div class="card">
-                <a href="{% url 'product_detail' product.id %}">{{ product.name }}</a>
-                {% if product.image %}
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
-                {% else %}
-                    <p>-</p>
-                {% endif %}
-                {{ product.price }}
-            </div>
-        {% endfor %}
-    {% else %}
-        <p>Товаров нет</p>
-    {% endif %}
-    </div>
 {% endblock %}

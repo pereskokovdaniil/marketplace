@@ -3,36 +3,52 @@
 {% block title %}{{ product.name }}{% endblock %}
 
 {% block content %}
-    <div class="container">
-        <a href="{% url 'index' %}">главная</a>
-        {% if user == product.seller %}
-        <a href="{% url 'product_edit' product.id %}">Редактировать</a>
-        {% endif %}
-        {{ product.name }}<hr>
-        {% if product.image %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}">
-        {% else %}
-            <p>-</p>
-        {% endif %}
-        {{ product.price }}<hr>
-        {{ product.description }}<hr>
-        {{ product.category }}<hr>
-        {{ product.seller }}<hr>
-        осталось: {{ product.stock }}<hr>
-        <a href="{% url 'add_cart' product.id %}">Добавить в корзину</a>
+    <div class="product-page">
+        <div class="product-info">
+            <div class="product-image">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                    <p>-</p>
+                {% endif %}
+            </div>
 
-        {% if can_review %}
-            <a href="{% url 'add_review' product.id %}">Добавить отзыв</a>
-        {% endif %}
+            <div class="product-details">
+                <h2>{{ product.name }}</h2>
+                <p class="product-price">{{ product.price }} руб.</p>
+                <p class="product-desc">{{ product.description }}</p>
+                <p><strong>Категория:</strong> {{ product.category }}</p>
+                <p><strong>Продавец:</strong> {{ product.seller }}</p>
+                <p><strong>Осталось:</strong> {{ product.stock }} шт.</p>
 
-        <p>Средний рейтинг: {{ rating|floatformat:1 }}</p>
-        {% for review in reviews %}
-        <div>
-            <p>{{ review.user.username }} - {{ review.rating }}/5</p>
-            <p>{{ review.created_at }}</p>
+                {% if user == product.seller %}
+                    <a href="{% url 'product_edit' product.id %}" class="btn-edit">Редактировать</a>
+                {% endif %}
+
+                <a href="{% url 'add_cart' product.id %}" class="btn-cart">Добавить в корзину</a>
+            </div>
         </div>
-        {% empty %}
-        <p>Отзывов пока нет</p>
-        {% endfor %}
+
+        <div class="reviews-section">
+            <h3>Отзывы</h3>
+            {% if reviews %}
+                <p class="avg-rating">Средний рейтинг: {{ rating|floatformat:1 }}/5</p>
+            {% else %}
+                <span></span>
+            {% endif %}
+
+            {% if can_review %}
+                <a href="{% url 'add_review' product.id %}" class="btn-review">Оставить отзыв</a>
+            {% endif %}
+
+            {% for review in reviews %}
+                <div class="review-item">
+                    <p class="review-user">{{ review.user.username }} - {{ review.rating }}/5</p>
+                    <p class="review-date">{{ review.created_at }}</p>
+                </div>
+            {% empty %}
+                <p class="no-reviews">Отзывов пока нет</p>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>Оставить отзыв на {{ product.name }}</h2>
-
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Добавить</button>
-    </form>
+    <div class="form-container">
+        <h2>Оставить отзыв на {{ product.name }}</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="form-btn">Добавить</button>
+        </form>
+    </div>
 {% endblock %}

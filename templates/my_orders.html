@@ -3,13 +3,16 @@
 {% block title %}Мои заказы{% endblock %}
 
 {% block content %}
-    <h2>Мои заказы</h2>
-    {% for order in orders %}
-        <div>
-            <p>Заказ №{{ order.id }} от {{ order.created_at }}</p>
-            <p>Сумма: {{ order.total }}</p>
-        </div>
+    <div class="orders-container">
+        <h2>Мои заказы</h2>
+        {% for order in orders %}
+            <div class="order-item">
+                <p class="order-id">Заказ №{{ order.id }}</p>
+                <p class="order-date">{{ order.created_at }}</p>
+                <p class="order-total">Сумма: {{ order.total }} руб.</p>
+            </div>
         {% empty %}
-            <p>Заказов нет</p>
-    {% endfor %}
+            <p class="orders-empty">Заказов нет</p>
+        {% endfor %}
+    </div>
 {% endblock %}
