@@ -44,7 +44,7 @@
             {% for review in reviews %}
                 <div class="review-item">
                     <p class="review-user">{{ review.user.username }} - {{ review.rating }}/5</p>
-                    <p class="review-date">{{ review.created_at }}</p>
+                    <p class="review-date">{{ review.created_at|date:"Y-m-d" }}</p>
                 </div>
             {% empty %}
                 <p class="no-reviews">Отзывов пока нет</p>

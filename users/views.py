@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import AuthenticationForm
+from .forms import LoginForm
 from users.forms import RegisterForm
 from django.contrib.auth import login,logout, authenticate
 from django.shortcuts import render, redirect
@@ -16,7 +16,7 @@ def register(request):
 
 def login_user(request):
     if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
+        form = LoginForm(request, data=request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
@@ -25,7 +25,7 @@ def login_user(request):
                 login(request, user)
                 return redirect('index')
     else:
-        form = AuthenticationForm()
+        form = LoginForm()
     return render(request, 'login.html', {'form': form})
 
 def logout_user(request):

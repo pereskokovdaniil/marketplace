@@ -1,16 +1,20 @@
 from django.contrib.auth.models import User
 from django import forms
 from .models import Profile
+from django.contrib.auth.forms import AuthenticationForm
 
 
 class RegisterForm(forms.ModelForm):
-    role = forms.ChoiceField(choices=Profile.ROLE_CHOICES, widget=forms.Select)
-
-    seller_name = forms.CharField(max_length=50, required=False)
+    role = forms.ChoiceField(choices=Profile.ROLE_CHOICES, widget=forms.Select, label='Роль')
+    seller_name = forms.CharField(max_length=50, required=False, label='Название магазина')
 
     class Meta:
         model = User
         fields = ('username', 'password')
+        labels = {
+            'username': 'Имя пользователя',
+            'password': 'Пароль',
+        }
         widgets = {
             'password': forms.PasswordInput()
         }
@@ -35,3 +39,7 @@ class RegisterForm(forms.ModelForm):
             user.save()
 
         return user
+
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(label='Имя пользователя')
+    password = forms.CharField(label='Пароль', widget=forms.PasswordInput)
