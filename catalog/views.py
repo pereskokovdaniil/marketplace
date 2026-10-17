@@ -164,13 +164,13 @@ def add_review(request, product_id):
 
     product = get_object_or_404(Product, id=product_id)
     ordered = OrderItem.objects.filter(order__user=request.user, product=product).exists()
-
     if not ordered:
         return redirect('product_detail', product_id=product_id)
 
     already_reviewed = Review.objects.filter(user=request.user, product=product).exists()
     if already_reviewed:
         return redirect('product_detail', product_id=product_id)
+    
     if request.method == 'POST':
         form = ReviewForm(request.POST)
         if form.is_valid():
